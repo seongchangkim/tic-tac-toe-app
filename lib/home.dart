@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:tic_tac_toe_app/dialog/home/game_over_alert_dialog.dart';
+import 'package:tic_tac_toe_app/widget/home/box.dart';
 import 'package:tic_tac_toe_app/widget/home/custom_ratio.dart';
 
 class Home extends StatefulWidget {
@@ -74,14 +76,38 @@ class _HomeState extends State<Home> {
                                       if (checkWin('X')) {
                                         isStart = false;
                                         resetEvent();
+                                        showDialog(
+                                            context: context,
+                                            builder: ((context) {
+                                              return const GameOverAlertDialog(
+                                                  title: '승리',
+                                                  content: '축하합니다! 당신이 AI를 이겼습니다.');
+                                            }));
+                                        return;
                                         // O(AI) 승리
                                       } else if (checkWin('O')) {
                                         isStart = false;
                                         resetEvent();
+                                        showDialog(
+                                            context: context,
+                                            builder: ((context) {
+                                              return const GameOverAlertDialog(
+                                                  title: '패배',
+                                                  content: '아쉽네요. AI가 이겼습니다.');
+                                            }));
+                                        return;
                                         // 무승부
                                       } else if (checkDraw()) {
                                         isStart = false;
                                         resetEvent();
+                                        showDialog(
+                                            context: context,
+                                            builder: ((context) {
+                                              return const GameOverAlertDialog(
+                                                  title: '무승부',
+                                                  content: '아쉽네요. 무승부입니다');
+                                            }));
+                                        return;
                                       }
 
                                       if (selectComputerDiffcult ==
@@ -89,26 +115,27 @@ class _HomeState extends State<Home> {
                                         easyComputerMove();
                                       } else if (selectComputerDiffcult ==
                                           ComputerDiffcult.normal) {
-                                        //
+                                        normalComputerMove();
                                       } else if (selectComputerDiffcult ==
                                           ComputerDiffcult.hard) {
-                                        //
+                                        hardComputerMove();
                                       }
                                     })
                                   }
                               },
-                              child: Container(
-                                  height: 110,
-                                  width: 110,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white30),
-                                  margin: const EdgeInsets.all(10),
-                                  child: Center(
-                                    child: Text(boxes[i][j],
-                                        style: const TextStyle(
-                                            fontSize: 54,
-                                            fontWeight: FontWeight.bold)),
-                                  )),
+                              child: Box(player: boxes[i][j])
+                              // Container(
+                              //     height: 110,
+                              //     width: 110,
+                              //     decoration: const BoxDecoration(
+                              //         color: Colors.white30),
+                              //     margin: const EdgeInsets.all(10),
+                              //     child: Center(
+                              //       child: Text(boxes[i][j],
+                              //           style: const TextStyle(
+                              //               fontSize: 54,
+                              //               fontWeight: FontWeight.bold)),
+                              //     )),
                             );
                           }),
                         )));
@@ -251,7 +278,7 @@ class _HomeState extends State<Home> {
     return boxes.every((row) => row.every((box) => box != ""));
   }
 
-  // AI 난이도 쉬움 움직임
+  // AI 쉬움 난이도 움직임
   void easyComputerMove() {
     bool computerChance = true;
     int rowIndex = 0;
@@ -269,5 +296,138 @@ class _HomeState extends State<Home> {
         });
       }
     }
+  }
+
+  // AI 보통 난이도
+  void normalComputerMove() {
+    // 승리 가능한 경우: 가로, 세로, 대각선 중 하나에서 승리 가능한 경우를 찾음.
+    for (int i = 0; i < boxes.length; i++) {
+      if (boxes[i][0] == 'O' && boxes[i][1] == 'O' && boxes[i][2] == '') {
+        boxes[i][2] = '0'; // 왼쪽에서 오른쪽으로 가로로 승리 가능
+        return;
+      }
+
+      if (boxes[i][0] == 'O' && boxes[i][2] == 'O' && boxes[i][1] == '') {
+        boxes[i][1] = '0'; // 가운데에서 가로로 승리 가능
+        return;
+      }
+
+      if (boxes[i][1] == 'O' && boxes[i][2] == 'O' && boxes[i][0] == '') {
+        boxes[i][0] = '0'; // 오른쪽에서 왼쪽으로 가로로 승리 가능
+        return;
+      }
+
+      if (boxes[0][i] == 'O' && boxes[1][i] == 'O' && boxes[2][i] == '') {
+        boxes[2][i] = '0'; // 위에서 아래로 세로로 승리 가능
+        return;
+      }
+
+      if (boxes[0][i] == 'O' && boxes[2][i] == 'O' && boxes[1][i] == '') {
+        boxes[1][i] = '0'; // 중앙에서 세로로 승리 가능
+        return;
+      }
+
+      if (boxes[1][i] == 'O' && boxes[2][i] == 'O' && boxes[0][i] == '') {
+        boxes[0][i] = '0'; // 아래에서 위로 세로로 승리 가능
+        return;
+      }
+    }
+
+    // 상대방이 승리 가능한 경우 방지: 가로, 세로, 대각선 중 하나에서 상대방이 승리 가능한 경우를 방지함.
+    for (int i = 0; i < boxes.length; i++) {
+      if (boxes[i][0] == 'X' && boxes[i][1] == 'X' && boxes[i][2] == '') {
+        boxes[i][2] = '0';
+        return;
+      }
+
+      if (boxes[i][0] == 'X' && boxes[i][2] == 'X' && boxes[i][1] == '') {
+        boxes[i][1] = '0';
+        return;
+      }
+
+      if (boxes[i][1] == 'X' && boxes[i][2] == 'X' && boxes[i][0] == '') {
+        boxes[i][0] = '0';
+        return;
+      }
+
+      if (boxes[0][i] == 'X' && boxes[1][i] == 'X' && boxes[2][i] == '') {
+        boxes[2][i] = '0';
+        return;
+      }
+
+      if (boxes[0][i] == 'X' && boxes[2][i] == 'X' && boxes[1][i] == '') {
+        boxes[1][i] = '0';
+        return;
+      }
+
+      if (boxes[1][i] == 'X' && boxes[2][i] == 'X' && boxes[0][i] == '') {
+        boxes[0][i] = '0';
+        return;
+      }
+    }
+
+    easyComputerMove();
+  }
+
+  // AI 어려움 난이도 움직임
+  void hardComputerMove() {
+    print(boxes);
+    var bestMove = minimax('O');
+    print(bestMove);
+    int rowIndex = bestMove['row'];
+    int colIndex = bestMove['col'];
+
+    setState(() {
+      boxes[rowIndex][colIndex] = 'O';
+    });
+  }
+
+  // 미니맥스 알고리즘을 이용하여 AI의 최적의 움직임을 게산하는 메소드
+  minimax(String player) {
+    if (checkWin('X')) {
+      return {'row': 0, 'col': 0, 'score': -1};
+    } else if (checkWin('O')) {
+      return {'row': 0, 'col': 0, 'score': 1};
+    } else if (checkDraw()) {
+      return {'row': 0, 'col': 0, 'score': 0};
+    }
+
+    var moves = [];
+    var subBoxes = boxes;
+    for (int row = 0; row < boxes.length; row++) {
+      for (int col = 0; col < boxes[row].length; col++) {
+        if (boxes[row][col] == '') {
+          boxes[row][col] = player;
+          var move = {
+            'row': row,
+            'col': col,
+            'score': minimax(player == 'X' ? 'O' : 'X')['score']
+          };
+          moves.add(move);
+          subBoxes[row][col] = '';
+        }
+      }
+    }
+
+    var bestMove = {};
+    if (player == 'O') {
+      int bestScore = -double.maxFinite.toInt();
+      for (var move in moves) {
+        if (move['score'] > bestScore) {
+          bestScore = move['score'];
+          bestMove = move;
+        }
+      }
+    } else {
+      int bestScore = double.maxFinite.toInt();
+      for (var move in moves) {
+        if (move['score'] < bestScore) {
+          bestScore = move['score'];
+          bestMove = move;
+        }
+      }
+    }
+
+    return bestMove;
   }
 }
