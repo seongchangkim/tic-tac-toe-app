@@ -66,77 +66,51 @@ class _HomeState extends State<Home> {
                           itemCount: boxes[i].length,
                           itemBuilder: ((BuildContext context, int j) {
                             return GestureDetector(
-                              onTap: () => {
-                                if (isStart)
-                                  {
-                                    setState(() {
-                                      boxes[i][j] = currentPlayer;
+                                onTap: boxes[i][j] == ""
+                                    ? () => {
+                                          if (isStart)
+                                            {
+                                              setState(() {
+                                                boxes[i][j] = currentPlayer;
 
-                                      // X(자신) 승리
-                                      if (checkWin('X')) {
-                                        isStart = false;
-                                        resetEvent();
-                                        showDialog(
-                                            context: context,
-                                            builder: ((context) {
-                                              return const GameOverAlertDialog(
-                                                  title: '승리',
-                                                  content: '축하합니다! 당신이 AI를 이겼습니다.');
-                                            }));
-                                        return;
-                                        // O(AI) 승리
-                                      } else if (checkWin('O')) {
-                                        isStart = false;
-                                        resetEvent();
-                                        showDialog(
-                                            context: context,
-                                            builder: ((context) {
-                                              return const GameOverAlertDialog(
-                                                  title: '패배',
-                                                  content: '아쉽네요. AI가 이겼습니다.');
-                                            }));
-                                        return;
-                                        // 무승부
-                                      } else if (checkDraw()) {
-                                        isStart = false;
-                                        resetEvent();
-                                        showDialog(
-                                            context: context,
-                                            builder: ((context) {
-                                              return const GameOverAlertDialog(
-                                                  title: '무승부',
-                                                  content: '아쉽네요. 무승부입니다');
-                                            }));
-                                        return;
-                                      }
+                                                // X(자신) 승리
+                                                if (checkWin('X')) {
+                                                  resultEvent('승리',
+                                                      '축하합니다! 당신이 AI를 이겼습니다.');
+                                                  return;
+                                                  // O(AI) 승리
+                                                } else if (checkWin('O')) {
+                                                  resultEvent(
+                                                      '패배', '아쉽네요. AI가 이겼습니다.');
+                                                  return;
+                                                  // 무승부
+                                                } else if (checkDraw()) {
+                                                  resultEvent(
+                                                      '무승부', '아쉽네요. 무승부입니다');
+                                                  return;
+                                                }
 
-                                      if (selectComputerDiffcult ==
-                                          ComputerDiffcult.easy) {
-                                        easyComputerMove();
-                                      } else if (selectComputerDiffcult ==
-                                          ComputerDiffcult.normal) {
-                                        normalComputerMove();
-                                      } else if (selectComputerDiffcult ==
-                                          ComputerDiffcult.hard) {
-                                        hardComputerMove();
-                                      }
-                                    })
-                                  }
-                              },
-                              child: Box(player: boxes[i][j])
-                              // Container(
-                              //     height: 110,
-                              //     width: 110,
-                              //     decoration: const BoxDecoration(
-                              //         color: Colors.white30),
-                              //     margin: const EdgeInsets.all(10),
-                              //     child: Center(
-                              //       child: Text(boxes[i][j],
-                              //           style: const TextStyle(
-                              //               fontSize: 54,
-                              //               fontWeight: FontWeight.bold)),
-                              //     )),
-                            );
+                                                if (selectComputerDiffcult ==
+                                                    ComputerDiffcult.easy) {
+                                                  easyComputerMove();
+                                                } else if (selectComputerDiffcult ==
+                                                    ComputerDiffcult.normal) {
+                                                  normalComputerMove();
+                                                } else if (selectComputerDiffcult ==
+                                                    ComputerDiffcult.hard) {
+                                                  hardComputerMove();
+                                                }
+                                                
+                                                if (checkWin('O')) {
+                                                  resultEvent(
+                                                      '패배', '아쉽네요. AI가 이겼습니다.');
+                                                  return;
+                                                }
+                                              })
+                                            }
+                                        }
+                                    : null,
+                                child: Box(player: boxes[i][j]));
                           }),
                         )));
                   })),
@@ -303,32 +277,32 @@ class _HomeState extends State<Home> {
     // 승리 가능한 경우: 가로, 세로, 대각선 중 하나에서 승리 가능한 경우를 찾음.
     for (int i = 0; i < boxes.length; i++) {
       if (boxes[i][0] == 'O' && boxes[i][1] == 'O' && boxes[i][2] == '') {
-        boxes[i][2] = '0'; // 왼쪽에서 오른쪽으로 가로로 승리 가능
+        boxes[i][2] = 'O'; // 왼쪽에서 오른쪽으로 가로로 승리 가능
         return;
       }
 
       if (boxes[i][0] == 'O' && boxes[i][2] == 'O' && boxes[i][1] == '') {
-        boxes[i][1] = '0'; // 가운데에서 가로로 승리 가능
+        boxes[i][1] = 'O'; // 가운데에서 가로로 승리 가능
         return;
       }
 
       if (boxes[i][1] == 'O' && boxes[i][2] == 'O' && boxes[i][0] == '') {
-        boxes[i][0] = '0'; // 오른쪽에서 왼쪽으로 가로로 승리 가능
+        boxes[i][0] = 'O'; // 오른쪽에서 왼쪽으로 가로로 승리 가능
         return;
       }
 
       if (boxes[0][i] == 'O' && boxes[1][i] == 'O' && boxes[2][i] == '') {
-        boxes[2][i] = '0'; // 위에서 아래로 세로로 승리 가능
+        boxes[2][i] = 'O'; // 위에서 아래로 세로로 승리 가능
         return;
       }
 
       if (boxes[0][i] == 'O' && boxes[2][i] == 'O' && boxes[1][i] == '') {
-        boxes[1][i] = '0'; // 중앙에서 세로로 승리 가능
+        boxes[1][i] = 'O'; // 중앙에서 세로로 승리 가능
         return;
       }
 
       if (boxes[1][i] == 'O' && boxes[2][i] == 'O' && boxes[0][i] == '') {
-        boxes[0][i] = '0'; // 아래에서 위로 세로로 승리 가능
+        boxes[0][i] = 'O'; // 아래에서 위로 세로로 승리 가능
         return;
       }
     }
@@ -336,32 +310,32 @@ class _HomeState extends State<Home> {
     // 상대방이 승리 가능한 경우 방지: 가로, 세로, 대각선 중 하나에서 상대방이 승리 가능한 경우를 방지함.
     for (int i = 0; i < boxes.length; i++) {
       if (boxes[i][0] == 'X' && boxes[i][1] == 'X' && boxes[i][2] == '') {
-        boxes[i][2] = '0';
+        boxes[i][2] = 'O';
         return;
       }
 
       if (boxes[i][0] == 'X' && boxes[i][2] == 'X' && boxes[i][1] == '') {
-        boxes[i][1] = '0';
+        boxes[i][1] = 'O';
         return;
       }
 
       if (boxes[i][1] == 'X' && boxes[i][2] == 'X' && boxes[i][0] == '') {
-        boxes[i][0] = '0';
+        boxes[i][0] = 'O';
         return;
       }
 
       if (boxes[0][i] == 'X' && boxes[1][i] == 'X' && boxes[2][i] == '') {
-        boxes[2][i] = '0';
+        boxes[2][i] = 'O';
         return;
       }
 
       if (boxes[0][i] == 'X' && boxes[2][i] == 'X' && boxes[1][i] == '') {
-        boxes[1][i] = '0';
+        boxes[1][i] = 'O';
         return;
       }
 
       if (boxes[1][i] == 'X' && boxes[2][i] == 'X' && boxes[0][i] == '') {
-        boxes[0][i] = '0';
+        boxes[0][i] = 'O';
         return;
       }
     }
@@ -371,9 +345,7 @@ class _HomeState extends State<Home> {
 
   // AI 어려움 난이도 움직임
   void hardComputerMove() {
-    print(boxes);
     var bestMove = minimax('O');
-    print(bestMove);
     int rowIndex = bestMove['row'];
     int colIndex = bestMove['col'];
 
@@ -409,7 +381,7 @@ class _HomeState extends State<Home> {
       }
     }
 
-    var bestMove = {};
+    var bestMove;
     if (player == 'O') {
       int bestScore = -double.maxFinite.toInt();
       for (var move in moves) {
@@ -429,5 +401,15 @@ class _HomeState extends State<Home> {
     }
 
     return bestMove;
+  }
+
+  void resultEvent(String title, String content) {
+    isStart = false;
+    resetEvent();
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return GameOverAlertDialog(title: title, content: content);
+        }));
   }
 }
