@@ -31,6 +31,7 @@ class _HomeState extends State<Home> {
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
+    print("home height : ${_height}");
 
     return Scaffold(
       body: Container(
@@ -57,71 +58,81 @@ class _HomeState extends State<Home> {
                   itemCount: boxes.length,
                   itemBuilder: ((BuildContext context, int i) {
                     return Container(
-                        height: 130,
+                        height: _height * 0.14,
                         margin: const EdgeInsets.only(bottom: 5),
                         child: Center(
                             child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: boxes[i].length,
-                          itemBuilder: ((BuildContext context, int j) {
-                            return GestureDetector(
-                                onTap: boxes[i][j] == ""
-                                    ? () => {
-                                          if (isStart)
-                                            {
-                                              setState(() {
-                                                boxes[i][j] = currentPlayer;
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: boxes[i].length,
+                              itemBuilder: ((BuildContext context, int j) {
+                                return GestureDetector(
+                                    onTap: boxes[i][j] == ""
+                                        ? () => {
+                                              if (isStart)
+                                                {
+                                                  setState(() {
+                                                    boxes[i][j] = currentPlayer;
 
-                                                // X(자신) 승리
-                                                if (checkWin('X')) {
-                                                  resultEvent('승리',
-                                                      '축하합니다! 당신이 AI를 이겼습니다.');
-                                                  return;
-                                                  // O(AI) 승리
-                                                } else if (checkWin('O')) {
-                                                  resultEvent(
-                                                      '패배', '아쉽네요. AI가 이겼습니다.');
-                                                  return;
-                                                  // 무승부
-                                                } else if (checkDraw()) {
-                                                  resultEvent(
-                                                      '무승부', '아쉽네요. 무승부입니다');
-                                                  return;
-                                                }
+                                                    // X(자신) 승리
+                                                    if (checkWin('X')) {
+                                                      resultEvent('승리',
+                                                          '축하합니다! 당신이 AI를 이겼습니다.');
+                                                      return;
+                                                      // O(AI) 승리
+                                                    } else if (checkWin('O')) {
+                                                      resultEvent(
+                                                          '패배', '아쉽네요. AI가 이겼습니다.');
+                                                      return;
+                                                      // 무승부
+                                                    } else if (checkDraw()) {
+                                                      resultEvent(
+                                                          '무승부', '아쉽네요. 무승부입니다');
+                                                      return;
+                                                    }
 
-                                                if (selectComputerDiffcult ==
-                                                    ComputerDiffcult.easy) {
-                                                  easyComputerMove();
-                                                } else if (selectComputerDiffcult ==
-                                                    ComputerDiffcult.normal) {
-                                                  normalComputerMove();
-                                                } else if (selectComputerDiffcult ==
-                                                    ComputerDiffcult.hard) {
-                                                  hardComputerMove();
+                                                    if (selectComputerDiffcult ==
+                                                        ComputerDiffcult.easy) {
+                                                      easyComputerMove();
+                                                    } else if (selectComputerDiffcult ==
+                                                        ComputerDiffcult.normal) {
+                                                      normalComputerMove();
+                                                    } else if (selectComputerDiffcult ==
+                                                        ComputerDiffcult.hard) {
+                                                      hardComputerMove();
+                                                    }
+
+                                                    if (checkWin('O')) {
+                                                      resultEvent(
+                                                          '패배', '아쉽네요. AI가 이겼습니다.');
+                                                      return;
+                                                    }
+                                                  })
                                                 }
-                                                
-                                                if (checkWin('O')) {
-                                                  resultEvent(
-                                                      '패배', '아쉽네요. AI가 이겼습니다.');
-                                                  return;
-                                                }
-                                              })
                                             }
-                                        }
-                                    : null,
-                                child: Box(player: boxes[i][j]));
-                          }),
-                        )));
-                  })),
+                                        : null,
+                                    child: Box(
+                                      width: _width * 0.2,
+                                      height: _height * 0.12,
+                                      player: boxes[i][j]
+                                    ));
+                              }),
+                            )));
+                      })),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("AI 난이도 : "),
+                    const Text(
+                      "AI 난이도 : ",
+                      style: TextStyle(
+                          fontFamily: 'PixelifySans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
                     Container(
-                      width: _width * 0.4,
+                      width: _width * 0.5,
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -184,14 +195,14 @@ class _HomeState extends State<Home> {
                         color: isStart ? Colors.red : Colors.blue,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10.0))),
-                    width: _width * 0.3,
+                    width: _width * 0.35,
                     height: _height * 0.05,
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     child: Center(
                       child: Text(
                         isStart ? "다시 시작" : "시작",
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     )),
               )

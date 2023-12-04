@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tic_tac_toe_app/splash_screen.dart';
 
-import 'home.dart';
+// import 'home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      home: const SplashScreen(),
     );
   }
 }

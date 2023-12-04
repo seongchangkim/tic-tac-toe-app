@@ -21,11 +21,11 @@ class GameOverAlertDialog extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10))),
         width: _width * 0.5,
-        height: _height * 0.25,
+        height: _height * 0.3,
         child: Column(
           children: [
             Expanded(
-                flex: 1,
+                flex: 2,
                 child: Container(
                   decoration: const BoxDecoration(
                       border: Border(
@@ -34,21 +34,20 @@ class GameOverAlertDialog extends StatelessWidget {
                     child: Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 20,
                         fontWeight: FontWeight.bold
                       )
                     ),
                   ),
                 )),
             Expanded(
-                flex: 3,
+                flex: 5,
                 child: Container(
                   child: Center(
                     child: Text(content),
                   ),
                 )),
             Expanded(
-                flex: 1,
+                flex: 2,
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);

@@ -4,19 +4,25 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class Box extends StatelessWidget {
   final String player;
-  const Box({super.key, required this.player});
+  final double width;
+  final double height;
+  const Box(
+      {super.key,
+      required this.player,
+      required this.width,
+      required this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 110,
-        width: 110,
+        height: height,
+        width: width,
         decoration: const BoxDecoration(color: Colors.white30),
         margin: const EdgeInsets.all(10),
         child: Center(
           child: Text(player,
               style:
-                  const TextStyle(fontSize: 54, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 42, fontWeight: FontWeight.bold)),
         ));
   }
 }
